@@ -22,7 +22,10 @@ app.get('/', function(req, res, next) {
 app.post('/v1/fulfillment', function(req, res, next) {
   
   console.log('la response');
-  res.send("<p>Qui mando la risposta</p>");
+  console.log(JSON.stringify(req.body));
+  console.log("la chiave "+ process.env.test);
+  let testo=req.body.queryResult.queryText;
+  res.json({answers:"ecco la risposta per  "+ testo});
 
 });
 
