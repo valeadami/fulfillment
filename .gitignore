@@ -1,0 +1,8 @@
+node_modules
+# Ignora la cartella della documentazione
+docs
+# Ignora tutti i file .txt
+*.txt
+
+# Ignora i file collegati alle chiavi API
+.env
