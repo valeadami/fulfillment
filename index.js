@@ -1,15 +1,11 @@
 
 var express = require("express");
 var bodyParser = require("body-parser");
-
 var path = require("path");
-
-
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 
 app.get('/', function(req, res, next) {
@@ -21,11 +17,70 @@ app.get('/', function(req, res, next) {
   
 app.post('/v1/fulfillment', function(req, res, next) {
   
-  console.log('la response');
+ 
   console.log(JSON.stringify(req.body));
-  console.log("la chiave "+ process.env.test);
-  let testo=req.body.queryResult.queryText;
-  res.json({answers:"ecco la risposta per  "+ testo});
+ // console.log("la chiave "+ process.env.test);
+ //il prompt dell'utente
+  let userPrompt=req.body.queryResult.queryText;
+  //userId della sessione di DF
+  let userId=req.body.session.split("/").pop();
+  
+/**
+ * Axios
+ */
+
+let result;
+const axios = require('axios');
+var data = JSON.stringify({
+ 
+  "model": "gpt-4-0314",
+
+  "messages": [
+    {
+        "role": "system",
+        "content": "You are a helpful and friendly assistant that help users find variations for sentences. Keep a polite tone. These are the rules to follow: You should refuse to answer any question that is unrelated to your task. Reply politely that you can find variations for sentences. If a user treats you badly, insults you, offends you, says racist or sexist phrases, reply back by saying that you do not intend to respond to anyone who disrespects you and invites you to maintain a polite and respectful language. As a number of variation, you can accept numbers greater then 0 and minor or equal to 20. If user doesn't provide any number of variations, reprompt them saying 'how many variations you need for for your sentence?'. When giving variations, start with 'here are the <number of variations> for your <sentence>. After giving out variations, ask the user if they need  variations again, for the same sentence or with a different sentence. If user says no, thanks and say goodbye, if yes ask again how many variants and the sentence, if not provided. You can understand and reply in any languages, so you can translate from languages."
+    },
+    {
+        "role": "user",
+        "content": userPrompt,
+        //"i need 3 variants for the sentence 'Lots of insight here not only for career transitioners'"
+      
+      }
+],
+
+  "temperature": 0.7,
+  "max_tokens": 256,
+  "top_p": 1,
+  "frequency_penalty": 0,
+  "presence_penalty": 0,
+  "user":userId
+});
+let config={  
+  method: 'post',
+  url: 'https://api.openai.com/v1/chat/completions',
+  headers: { 
+    'Content-Type': 'application/json', 
+    'Authorization': 'Bearer ' +process.env.test
+  },
+  data : data
+};
+
+axios(config).then((response)=> {
+
+
+  result = response.data;
+
+  console.log(result);
+   //risposta dopo la chiamata a OpenAI via Axios
+  res.status(200).json({answers:"Risposta: "+ result.choices[0].message.content}); //result.choices[0].text
+  
+})
+.catch( (error) =>{
+  console.log(error);
+  res.status(500).json({answers:"Ops, errore!"}); 
+});
+ 
+ 
 
 });
 
