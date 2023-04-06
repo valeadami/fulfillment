@@ -31,7 +31,7 @@ let result;
 
 var data = JSON.stringify({
  
-  "model": "gpt-4-0314",
+  "model": "gpt-3.5-turbo", //gpt-3.5-turbo gpt-4-0314
 
   "messages": [
     {
