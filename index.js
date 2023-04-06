@@ -17,20 +17,18 @@ app.get('/', function(req, res, next) {
   
 app.post('/v1/fulfillment', function(req, res, next) {
   
- 
-  console.log(JSON.stringify(req.body));
- // console.log("la chiave "+ process.env.test);
+  const axios = require('axios');
+
  //il prompt dell'utente
-  let userPrompt=req.body.queryResult.queryText;
-  //userId della sessione di DF
-  let userId=req.body.session.split("/").pop();
+  let userPrompt=req.body; 
+  
   
 /**
  * Axios
  */
 
 let result;
-const axios = require('axios');
+
 var data = JSON.stringify({
  
   "model": "gpt-4-0314",
@@ -42,7 +40,7 @@ var data = JSON.stringify({
     },
     {
         "role": "user",
-        "content": userPrompt,
+        "content": userPrompt.prompt,
         //"i need 3 variants for the sentence 'Lots of insight here not only for career transitioners'"
       
       }
@@ -53,7 +51,7 @@ var data = JSON.stringify({
   "top_p": 1,
   "frequency_penalty": 0,
   "presence_penalty": 0,
-  "user":userId
+  //"user":userId
 });
 let config={  
   method: 'post',
@@ -72,12 +70,12 @@ axios(config).then((response)=> {
 
   console.log(result);
    //risposta dopo la chiamata a OpenAI via Axios
-  res.status(200).json({answers:"Risposta: "+ result.choices[0].message.content}); //result.choices[0].text
+  res.status(200).json({answers:result.choices[0].message.content}); 
   
 })
 .catch( (error) =>{
   console.log(error);
-  res.status(500).json({answers:"Ops, errore!"}); 
+  res.status(500).json({answers:"Ops, an error happened. Sorry about that, please try again."}); 
 });
  
  
