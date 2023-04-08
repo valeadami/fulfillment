@@ -21,7 +21,8 @@ app.post('/v1/fulfillment', function(req, res, next) {
 
  //il prompt dell'utente
   let userPrompt=req.body; 
-  
+  //`SM con filtro risposta: ${strRisposta}`
+  console.log(`prompt utente:  ${userPrompt.prompt}`);
   
 /**
  * Axios
@@ -68,7 +69,7 @@ axios(config).then((response)=> {
 
   result = response.data;
 
-  console.log(result);
+  console.log(JSON.stringify(result));
    //risposta dopo la chiamata a OpenAI via Axios
   res.status(200).json({answers:result.choices[0].message.content}); 
   
