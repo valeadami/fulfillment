@@ -83,6 +83,35 @@ axios(config).then((response)=> {
 
 });
 
+//per test Voiceflow
+//menu 
+app.get('/v1/menu', function(req,res,next) {
+
+  let menu={
+    "menu": [
+      "Grilled Chicken",
+      "Hamburger",
+      "Sandwich",
+      "Focaccia"
+    ]
+  }
+  res.status(200).json({answers:menu});
+});
+
+//bevande
+app.get('/v1/bevande', function(req, res,next) {
+  let bevande={
+    "beverages":[
+      "Light Beer",
+      "Dark Beer",
+      "Special Beer",
+      "Coca Cola",
+      "Still Water"
+    ]
+  };
+  res.status(200).json({answers:bevande});
+});
+
 app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");
   });
