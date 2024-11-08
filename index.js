@@ -125,7 +125,7 @@ app.post('/v1/claude', async (req, res) => {
 });
 
 // specialità del giorno
-app.get('/v1/daily-specials', async (req, res) => {
+app.post('/v1/daily-specials', async (req, res) => {
   console.log('****************** in /v1/daily-specials')
   try {
     if (!utility.checkPromptValidity(req)) {
